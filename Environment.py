@@ -10,9 +10,10 @@ with open("map.txt", "r") as file:
 
 class Node:
     # Initialize
-    def __init__(self, env, parent=None, action=None):
+    def __init__(self, start, env, goal, parent=None, action=None):
         self.env = env
         self.parent = parent
+        self.goal = goal
         self.action = action
 
     def path(self):
