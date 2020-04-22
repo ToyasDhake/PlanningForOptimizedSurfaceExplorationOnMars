@@ -1,4 +1,5 @@
 from copy import deepcopy
+from math import sqrt
 
 img = []
 with open("map.txt", "r") as file:
@@ -10,11 +11,16 @@ with open("map.txt", "r") as file:
 
 class Node:
     # Initialize
-    def __init__(self, start, env, goal, parent=None, action=None):
+    def __init__(self, env, stepSize,  parent=None):
         self.env = env
         self.parent = parent
-        self.goal = goal
-        self.action = action
+        self.distance = 0
+        if parent != None:
+            self.costToCome = parent.costToCome + stepSize
+        else:
+            self.costToCome = 0
+    def updateDistance(self, x, y):
+        self.distance = sqrt((self.env[0] - x) ** 2 + (self.env[1] - y) ** 2)
 
     def path(self):
         node, p = self, []
