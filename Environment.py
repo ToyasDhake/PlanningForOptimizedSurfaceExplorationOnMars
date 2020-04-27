@@ -1,5 +1,5 @@
 from copy import deepcopy
-from math import sqrt
+from math import sqrt, cos, sin
 
 img = []
 with open("map.txt", "r") as file:
@@ -30,80 +30,18 @@ class Node:
         yield from reversed(p)
 
 class Environment:
-    def __init__(self, currentPosition, wheelClearance=5):
-        self.currentPosition = currentPosition
+    def __init__(self, stepSize, dimension, wheelClearance=250):
+        self.stepSize= stepSize
         self.wheelClearance = wheelClearance
+        self.dimension = dimension
 
-    def checkPosition(self, val):
-        global img
-        temp = deepcopy(self)
-        if val == 'U':
-            temp.currentPosition[1] += 1
-        elif val == 'D':
-            temp.currentPosition[1] -= 1
-        elif val == 'R':
-            temp.currentPosition[0] += 1
-        elif val == 'L':
-            temp.currentPosition[0] -= 1
-        elif val == 'UL':
-            temp.currentPosition[0] -= 1
-            temp.currentPosition[1] += 1
-        elif val == 'UR':
-            temp.currentPosition[0] += 1
-            temp.currentPosition[1] += 1
-        elif val == 'DL':
-            temp.currentPosition[0] -= 1
-            temp.currentPosition[1] -= 1
-        elif val == 'DR':
-            temp.currentPosition[0] += 1
-            temp.currentPosition[1] -= 1
-        if abs(img[temp.currentPosition[0]][temp.currentPosition[1]] - img[self.currentPosition[0]][self.currentPosition[1]]) > self.wheelClearance:
-            return True
-        else:
-            return False
-
-    def possibleMoves(self):
-        moves = []
-        if self.currentPosition[2] == "U":
-            moves += ["DL","D","DR"]
-        elif self.currentPosition[2] == "D":
-            moves += ["UL","U","UR"]
-        elif self.currentPosition[2] == "R":
-            moves += ["UL","L","DL"]
-        elif self.currentPosition[2] == "L":
-            moves += ["UR","R","DR"]
-        elif self.currentPosition[2] == "UR":
-            moves += ["L","DL","D"]
-        elif self.currentPosition[2] == "UL":
-            moves += ["D","DR","R"]
-        elif self.currentPosition[2] == "DR":
-            moves += ["U","UL","L"]
-        elif self.currentPosition[2] == "DL":
-            moves += ["U","UR","R"]
-        for i in moves:
-            if self.checkPosition(i):
-                moves.remove(i)
-
-    def move(self, val):
-        temp = deepcopy(self)
-        if val == 'U':
-            temp.currentPosition[1] += 1
-        if val == 'D':
-            temp.currentPosition[1] -= 1
-        if val == 'R':
-            temp.currentPosition[0] += 1
-        if val == 'L':
-            temp.currentPosition[0] -= 1
-        if val == 'UL':
-            temp.currentPosition[0] -= 1
-            temp.currentPosition[1] += 1
-        if val == 'UR':
-            temp.currentPosition[0] += 1
-            temp.currentPosition[1] += 1
-        if val == 'DL':
-            temp.currentPosition[0] -= 1
-            temp.currentPosition[1] -= 1
-        if val == 'DR':
-            temp.currentPosition[0] += 1
-            temp.currentPosition[1] -= 1
-        return temp
+    def checkPosition(self, start, angle):
+        valid = True
+        for i in range(1, self.stepSize):
+            new = [int(start[0] + i * cos(angle)), int(start[1] + i * sin(angle))]
+            old = [int(start[0] + (i-1) * cos(angle)), int(start[1] + (i-1) * sin(angle))]
+            if new[0] < 0 or new[1] < 0 or new[0] > self.dimension[0] or new[1] > self.dimension[1]:
+                return False
+            if abs(img[new[0]][new[1]] - img [old[0]][old[1]]) > self.wheelClearance:
+                valid = False
+        return valid
