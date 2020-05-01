@@ -1,6 +1,6 @@
 import cv2
 
-img = cv2.imread("Heightmapnew.png", 0)
+img = cv2.imread("../meshes/Heightmapnew.png", 0)
 height, width = img.shape
 print(height, width)
 
