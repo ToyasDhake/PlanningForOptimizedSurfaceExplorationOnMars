@@ -2,7 +2,7 @@ from copy import deepcopy
 from math import sqrt, cos, sin
 
 img = []
-with open("map.txt", "r") as file:
+with open("/home/toyas/catkin_ws/src/PlanningForOptimizedSurfaceExplorationOnMars/scripts/map.txt", "r") as file:
     for line in file:
         line = line
         row = line.split(",")
@@ -30,7 +30,7 @@ class Node:
         yield from reversed(p)
 
 class Environment:
-    def __init__(self, stepSize, dimension, wheelClearance=250):
+    def __init__(self, stepSize, dimension, wheelClearance=5):
         self.stepSize= stepSize
         self.wheelClearance = wheelClearance
         self.dimension = dimension
@@ -40,7 +40,7 @@ class Environment:
         for i in range(1, self.stepSize):
             new = [int(start[0] + i * cos(angle)), int(start[1] + i * sin(angle))]
             old = [int(start[0] + (i-1) * cos(angle)), int(start[1] + (i-1) * sin(angle))]
-            if new[0] < 0 or new[1] < 0 or new[0] > self.dimension[0] or new[1] > self.dimension[1]:
+            if new[0] < 0 or new[1] < 0 or new[0] >= self.dimension[0] or new[1] >= self.dimension[1]:
                 return False
             if abs(img[new[0]][new[1]] - img [old[0]][old[1]]) > self.wheelClearance:
                 valid = False
