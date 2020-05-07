@@ -87,4 +87,4 @@ class RRTStar:
                                 if environment.checkConnection(neighbourhood[i].parent.env, neighbourhood[j].env):
                                     if environment.checkParent(neighbourhood[i].parent, neighbourhood[j]):
                                         neighbourhood[i].parent = neighbourhood[j]
-        return nodes
+        return nodes[0].path()

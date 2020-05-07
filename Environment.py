@@ -2,7 +2,7 @@ from copy import deepcopy
 from math import sqrt, cos, sin, atan2
 
 img = []
-with open("/home/toyas/catkin_ws/src/PlanningForOptimizedSurfaceExplorationOnMars/scripts/map.txt", "r") as file:
+with open("map.txt", "r") as file:
     for line in file:
         line = line
         row = line.split(",")
@@ -27,7 +27,7 @@ class Node:
         while node:
             p.append(node)
             node = node.parent
-        yield from reversed(p)
+        return reversed(p)
 
 class Environment:
 
