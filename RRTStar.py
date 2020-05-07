@@ -20,42 +20,52 @@ class RRTStar:
         environment = Environment(self.stepSize, [self.xDimension, self.yDimension])
         nodes = []
         nodes.append(Node(self.start, self.stepSize))
-        for _ in range(self.numberOfPoints):
-            x = randint(0, self.xDimension - 1)
-            y = randint(0, self.yDimension - 1)
-            for i in range(len(nodes)):
-                nodes[i].updateDistance(x, y)
-            nodes.sort(key=lambda x: x.distance)
-            possible = False
-            temp = 0
-            while not possible:
-                angle = atan2(y - nodes[temp].env[1], x - nodes[temp].env[0])
-                newX = nodes[temp].env[0] + self.stepSize * cos(angle)
-                newY = nodes[temp].env[1] + self.stepSize * sin(angle)
-                possible = environment.checkPosition(nodes[temp].env, angle)
-                temp += 1
-            if possible:
-                neighbourhood = []
+        goalReached = False
+        while not goalReached:
+            for _ in range(self.numberOfPoints):
+                x = randint(0, self.xDimension - 1)
+                y = randint(0, self.yDimension - 1)
                 for i in range(len(nodes)):
-                    if (newX - nodes[i].env[0]) ** 2 + (newY - nodes[i].env[1]) ** 2 < (
-                            self.stepSize * self.neighbourhoodScale) ** 2:
-                        neighbourhood.append(nodes[i])
-                neighbourhood.sort(key=lambda x: x.costToCome)
-                nodes.append(Node([newX, newY],
-                                  sqrt((newX - neighbourhood[0].env[0]) ** 2 + (newY - neighbourhood[0].env[1]) ** 2),
-                                  neighbourhood[0]))
+                    nodes[i].updateDistance(x, y)
+                nodes.sort(key=lambda x: x.distance)
+                possible = False
+                temp = 0
+                while not possible:
+                    angle = atan2(y - nodes[temp].env[1], x - nodes[temp].env[0])
+                    newX = nodes[temp].env[0] + self.stepSize * cos(angle)
+                    newY = nodes[temp].env[1] + self.stepSize * sin(angle)
+                    possible = environment.checkPosition(nodes[temp].env, angle)
+                    temp += 1
+                if possible:
+                    neighbourhood = []
+                    for i in range(len(nodes)):
+                        if (newX - nodes[i].env[0]) ** 2 + (newY - nodes[i].env[1]) ** 2 < (
+                                self.stepSize * self.neighbourhoodScale) ** 2:
+                            neighbourhood.append(nodes[i])
+                    neighbourhood.sort(key=lambda x: x.costToCome)
+                    nodes.append(Node([newX, newY],
+                                      sqrt((newX - neighbourhood[0].env[0]) ** 2 + (newY - neighbourhood[0].env[1]) ** 2),
+                                      neighbourhood[0]))
 
-                for i in range(len(neighbourhood)):
-                    for j in range(len(neighbourhood)):
-                        if neighbourhood[i].parent is not None:
-                            if i != j:
-                                if neighbourhood[i].parent.costToCome + sqrt(
-                                        (neighbourhood[i].parent.env[0] - neighbourhood[i].env[0]) ** 2 + (
-                                                neighbourhood[i].parent.env[1] - neighbourhood[i].env[1]) ** 2) > \
-                                        neighbourhood[j].costToCome + sqrt(
-                                        (neighbourhood[j].env[0] - neighbourhood[i].env[0]) ** 2 + (
-                                                neighbourhood[j].env[1] - neighbourhood[i].env[1]) ** 2):
-                                    neighbourhood[i].parent = neighbourhood[j]
+                    for i in range(len(neighbourhood)):
+                        for j in range(len(neighbourhood)):
+                            if neighbourhood[i].parent is not None:
+                                if i != j:
+                                    if neighbourhood[i].parent.costToCome + sqrt(
+                                            (neighbourhood[i].parent.env[0] - neighbourhood[i].env[0]) ** 2 + (
+                                                    neighbourhood[i].parent.env[1] - neighbourhood[i].env[1]) ** 2) > \
+                                            neighbourhood[j].costToCome + sqrt(
+                                            (neighbourhood[j].env[0] - neighbourhood[i].env[0]) ** 2 + (
+                                                    neighbourhood[j].env[1] - neighbourhood[i].env[1]) ** 2):
+                                        if environment.checkConnection(neighbourhood[i].parent.env, neighbourhood[j].env):
+                                            neighbourhood[i].parent = neighbourhood[j]
+
+
+            for i in range(len(nodes)):
+                nodes[i].updateDistance(self.goal[0], self.goal[1])
+            nodes.sort(key=lambda x: x.distance)
+            if sqrt((nodes[0].env[0]-self.goal[0])**2 + (nodes[0].env[1]-self.goal[1]) ** 2) < 15:
+                goalReached = True
 
         for k in range(len(nodes)):
             neighbourhood = []
@@ -74,6 +84,6 @@ class RRTStar:
                                         j].costToCome + sqrt(
                                 (neighbourhood[j].env[0] - neighbourhood[i].env[0]) ** 2 + (
                                         neighbourhood[j].env[1] - neighbourhood[i].env[1]) ** 2):
-                                neighbourhood[i].parent = neighbourhood[j]
-
-        return nodes
+                                if environment.checkConnection(neighbourhood[i].parent.env, neighbourhood[j].env):
+                                    neighbourhood[i].parent = neighbourhood[j]
+        return nodes[0].path()
