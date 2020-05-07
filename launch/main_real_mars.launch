@@ -3,12 +3,12 @@
 	<include file="$(find PlanningForOptimizedSurfaceExplorationOnMars)/launch/mars_curiosity_world.launch"/>
 
 
-    <arg name="x" default="0.0" />
-    <arg name="y" default="0.0" />
-    <arg name="z" default="8" />
+    <arg name="x" default="-19.7" />
+    <arg name="y" default="-57" />
+    <arg name="z" default="10" />
     <arg name="roll" default="0"/>
     <arg name="pitch" default="0"/>
-    <arg name="yaw" default="0.0" />
+    <arg name="yaw" default="3.142" />
 
 	<arg name="model" default="$(find curiosity_mars_rover_description)/urdf/curiosity_mars_rover.xacro"/>
 	

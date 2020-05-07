@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 import cv2
 
 img = cv2.imread("../meshes/Heightmapnew.png", 0)
