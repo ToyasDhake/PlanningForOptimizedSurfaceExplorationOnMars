@@ -30,7 +30,7 @@ class RRTStar:
                 nodes.sort(key=lambda x: x.distance)
                 possible = False
                 temp = 0
-                while not possible:
+                while not possible and temp < len(nodes):
                     angle = atan2(y - nodes[temp].env[1], x - nodes[temp].env[0])
                     newX = nodes[temp].env[0] + self.stepSize * cos(angle)
                     newY = nodes[temp].env[1] + self.stepSize * sin(angle)
@@ -58,8 +58,8 @@ class RRTStar:
                                             (neighbourhood[j].env[0] - neighbourhood[i].env[0]) ** 2 + (
                                                     neighbourhood[j].env[1] - neighbourhood[i].env[1]) ** 2):
                                         if environment.checkConnection(neighbourhood[i].parent.env, neighbourhood[j].env):
-                                            neighbourhood[i].parent = neighbourhood[j]
-
+                                            if environment.checkParent(neighbourhood[i].parent, neighbourhood[j]):
+                                                neighbourhood[i].parent = neighbourhood[j]
 
             for i in range(len(nodes)):
                 nodes[i].updateDistance(self.goal[0], self.goal[1])
@@ -85,5 +85,6 @@ class RRTStar:
                                 (neighbourhood[j].env[0] - neighbourhood[i].env[0]) ** 2 + (
                                         neighbourhood[j].env[1] - neighbourhood[i].env[1]) ** 2):
                                 if environment.checkConnection(neighbourhood[i].parent.env, neighbourhood[j].env):
-                                    neighbourhood[i].parent = neighbourhood[j]
-        return nodes[0].path()
+                                    if environment.checkParent(neighbourhood[i].parent, neighbourhood[j]):
+                                        neighbourhood[i].parent = neighbourhood[j]
+        return nodes
