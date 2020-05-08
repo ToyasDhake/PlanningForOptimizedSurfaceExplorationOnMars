@@ -1,7 +1,9 @@
 #!/usr/bin/env python
 from math import sqrt, cos, sin, radians, atan2, floor
+
+# Read map
 img = []
-with open("/home/toyas/catkin_ws/src/PlanningForOptimizedSurfaceExplorationOnMars/scripts/RRTStar/map.txt", "r") as file:
+with open("/home/toyas/catkin_ws/src/PlanningForOptimizedSurfaceExplorationOnMars/scripts/Dijkstra/map.txt", "r") as file:
     for line in file:
         line = line
         row = line.split(",")
@@ -19,7 +21,7 @@ class Node:
         else:
             self.g = 0
         # Heuristic function
-        self.weight = self.g + sqrt((env[0] - goal[0]) ** 2 + (env[1] - goal[1]) ** 2)
+        self.weight = self.g 
 
     # Solve for path from goal to start node
     def path(self):

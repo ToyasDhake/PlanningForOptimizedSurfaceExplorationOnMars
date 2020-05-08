@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 from math import sqrt, cos, sin, radians, atan2, floor
+
+# Read map
 img = []
 with open("/home/toyas/catkin_ws/src/PlanningForOptimizedSurfaceExplorationOnMars/scripts/RRTStar/map.txt", "r") as file:
     for line in file:

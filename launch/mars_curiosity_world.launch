@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <launch>
-
+    <!-- Set model for world -->
 	<arg name="paused" default="true"/>
 	<arg name="use_sim_time" default="true"/>
 	<arg name="gui" default="true"/>
@@ -8,7 +8,7 @@
 	<arg name="debug" default="false"/>
     <arg name="world" default="$(find PlanningForOptimizedSurfaceExplorationOnMars)/worlds/mars_curiosity.world"/>
 
-
+    <!-- Load World-->
 	<include file="$(find gazebo_ros)/launch/empty_world.launch">
 		<arg name="world_name" value="$(arg world)"/>
 		<arg name="debug" value="$(arg debug)" />
