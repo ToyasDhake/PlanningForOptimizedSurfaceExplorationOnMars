@@ -13,6 +13,7 @@ with open("/home/toyas/catkin_ws/src/PlanningForOptimizedSurfaceExplorationOnMar
 class Node:
     # Initialize
     def __init__(self,start,  env, goal, stepSize, parent=None):
+        global img
         self.env = env
         self.parent = parent
         self.goal = goal
@@ -21,7 +22,10 @@ class Node:
         else:
             self.g = 0
         # Heuristic function
-        self.weight = self.g + sqrt((env[0] - goal[0]) ** 2 + (env[1] - goal[1]) ** 2)
+        if parent is not None:
+            self.weight = self.g + sqrt((env[0] - goal[0]) ** 2 + (env[1] - goal[1]) ** 2 + (img[int(env[0])][int(env[1])] - img[int(parent.env[0])][int(parent.env[1])])**2)
+        else:
+            self.weight = self.g + sqrt((env[0] - goal[0]) ** 2 + (env[1] - goal[1]) ** 2)
 
     # Solve for path from goal to start node
     def path(self):
